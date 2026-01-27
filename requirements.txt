@@ -1,0 +1,23 @@
+Personal Reading Progress Tracker
+Why this project:
+
+You have a substantial reading list (DDIA, ICANN/IANA/IETF materials)
+Solves a real problem you have right now
+Covers all FastAPI essentials
+Simple enough to build in a weekend, complex enough to learn from
+
+Features:
+Backend (FastAPI):
+
+Add books/articles to reading list
+Track progress (pages read, completion %)
+Add notes/highlights
+Set reading goals
+View reading statistics
+
+Frontend (Simple HTML/JS):
+
+Dashboard showing current books
+Progress bars
+Simple form to add entries
+Notes section

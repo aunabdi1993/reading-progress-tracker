@@ -1,20 +1,11 @@
 from typing import Union
-from enum import Enum
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+
+from models.BaseModal import Item
+from models.ModelName import ModelName
 
 app = FastAPI()
-
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
-
-class ModelName(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
 
 @app.get("/")
 def read_root():

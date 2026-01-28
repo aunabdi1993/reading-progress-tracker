@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import BookCard from "./components/BookCard";
 import AddBookForm from "./components/AddBookForm";
 import StatsCard from "./components/StatsCard";
+import Link from "next/link";
+import mockData from "./data/mockBooks.json";
 
 interface Book {
   id: number;
@@ -35,6 +38,7 @@ interface Stats {
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function Home() {
+  const { user, error, isLoading: isUserLoading } = useUser();
   const [books, setBooks] = useState<Book[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -42,7 +46,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch books from API
+  // Fetch books from API (with mock data fallback)
   const fetchBooks = async () => {
     try {
       setIsLoading(true);
@@ -58,25 +62,62 @@ export default function Home() {
       if (response.ok) {
         const data = await response.json();
         setBooks(data);
+      } else {
+        // Fallback to mock data if API fails
+        console.log("API not available, using mock data");
+        loadMockData();
       }
     } catch (error) {
       console.error("Error fetching books:", error);
+      // Fallback to mock data on error
+      console.log("Using mock data as fallback");
+      loadMockData();
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fetch statistics
+  // Fetch statistics (with mock data fallback)
   const fetchStats = async () => {
     try {
       const response = await fetch(`${API_URL}/stats`);
       if (response.ok) {
         const data = await response.json();
         setStats(data);
+      } else {
+        // Fallback to mock stats
+        setStats(mockData.stats);
       }
     } catch (error) {
       console.error("Error fetching stats:", error);
+      // Fallback to mock stats
+      setStats(mockData.stats);
     }
+  };
+
+  // Load mock data with filtering
+  const loadMockData = () => {
+    let filteredBooks = [...mockData.books];
+
+    // Apply status filter
+    if (filterStatus !== "all") {
+      filteredBooks = filteredBooks.filter(
+        (book) => book.status === filterStatus
+      );
+    }
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filteredBooks = filteredBooks.filter(
+        (book) =>
+          book.title.toLowerCase().includes(query) ||
+          book.author.toLowerCase().includes(query)
+      );
+    }
+
+    setBooks(filteredBooks);
+    setStats(mockData.stats);
   };
 
   // Load data on mount and when filters change
@@ -137,19 +178,115 @@ export default function Home() {
                 Track your reading journey, one page at a time
               </p>
             </div>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
-            >
-              + Add Book
-            </button>
+            <div className="flex items-center gap-4">
+              {user && (
+                <>
+                  <div className="flex items-center gap-3">
+                    {user.picture && (
+                      <img
+                        src={user.picture}
+                        alt={user.name || "User"}
+                        className="w-10 h-10 rounded-full border-2 border-indigo-500"
+                      />
+                    )}
+                    <div className="hidden sm:block">
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowAddForm(true)}
+                    className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                  >
+                    + Add Book
+                  </button>
+                  <Link
+                    href="/api/auth/logout"
+                    className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors"
+                  >
+                    Logout
+                  </Link>
+                </>
+              )}
+              {!user && !isUserLoading && (
+                <Link
+                  href="/api/auth/login"
+                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Statistics Cards */}
-        {stats && (
+        {/* Loading State */}
+        {isUserLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        )}
+
+        {/* Not Authenticated */}
+        {!user && !isUserLoading && (
+          <div className="text-center py-20">
+            <div className="bg-white rounded-lg shadow-lg p-12 max-w-2xl mx-auto">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                Welcome to Reading Progress Tracker
+              </h2>
+              <p className="text-lg text-gray-600 mb-8">
+                Track your reading journey, manage your books, and monitor your
+                progress all in one place. Sign in to get started!
+              </p>
+              <Link
+                href="/api/auth/login"
+                className="inline-block bg-indigo-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg text-lg"
+              >
+                Sign In to Continue
+              </Link>
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <div className="p-4">
+                  <div className="text-3xl mb-2">📚</div>
+                  <h3 className="font-semibold text-gray-900 mb-1">
+                    Track Books
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Add and organize all your books in one place
+                  </p>
+                </div>
+                <div className="p-4">
+                  <div className="text-3xl mb-2">📊</div>
+                  <h3 className="font-semibold text-gray-900 mb-1">
+                    Monitor Progress
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Track pages read and completion percentage
+                  </p>
+                </div>
+                <div className="p-4">
+                  <div className="text-3xl mb-2">✨</div>
+                  <h3 className="font-semibold text-gray-900 mb-1">
+                    Stay Motivated
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    View stats and celebrate your achievements
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Authenticated Content */}
+        {user && !isUserLoading && (
+          <>
+            {/* Statistics Cards */}
+            {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatsCard
               title="Total Books"
@@ -188,7 +325,7 @@ export default function Home() {
                 placeholder="Search books or authors..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               />
             </div>
 
@@ -197,7 +334,7 @@ export default function Home() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               >
                 <option value="all">All Books</option>
                 <option value="not_started">Not Started</option>
@@ -238,6 +375,8 @@ export default function Home() {
               />
             ))}
           </div>
+        )}
+          </>
         )}
       </main>
 

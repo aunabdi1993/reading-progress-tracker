@@ -130,7 +130,7 @@ export default function BookCard({ book, onDelete, onUpdateProgress }: BookCardP
                 max={book.total_pages}
                 value={currentPage}
                 onChange={(e) => setCurrentPage(parseInt(e.target.value) || 0)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
                 placeholder="Current page"
               />
             </div>

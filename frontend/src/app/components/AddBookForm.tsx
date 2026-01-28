@@ -114,7 +114,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
               value={formData.title}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               placeholder="Designing Data-Intensive Applications"
             />
           </div>
@@ -131,7 +131,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
               value={formData.author}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               placeholder="Martin Kleppmann"
             />
           </div>
@@ -150,7 +150,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
                 onChange={handleChange}
                 required
                 min="1"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
                 placeholder="616"
               />
             </div>
@@ -165,7 +165,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
                 value={formData.current_page}
                 onChange={handleChange}
                 min="0"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
                 placeholder="0"
               />
             </div>
@@ -182,7 +182,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               >
                 <option value="not_started">Not Started</option>
                 <option value="in_progress">In Progress</option>
@@ -199,7 +199,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
                 name="genre"
                 value={formData.genre}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
                 placeholder="Technical, Fiction, etc."
               />
             </div>
@@ -216,7 +216,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
               name="cover_url"
               value={formData.cover_url}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               placeholder="https://example.com/cover.jpg"
             />
           </div>
@@ -235,7 +235,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
               min="0"
               max="5"
               step="0.5"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               placeholder="4.5"
             />
           </div>
@@ -251,7 +251,7 @@ export default function AddBookForm({ onClose, onSuccess }: AddBookFormProps) {
               value={formData.notes}
               onChange={handleChange}
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
               placeholder="Add your reading notes, highlights, or thoughts..."
             />
           </div>

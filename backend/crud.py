@@ -159,6 +159,21 @@ def update_book_progress(db: Session, book_id: int, current_page: int) -> Option
     return db_book
 
 
+def update_book_notes(db: Session, book_id: int, notes: str) -> Optional[Book]:
+    """
+    Update book notes
+    """
+    db_book = get_book(db, book_id)
+    if not db_book:
+        return None
+
+    db_book.notes = notes
+    db_book.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(db_book)
+    return db_book
+
+
 def delete_book(db: Session, book_id: int) -> bool:
     """
     Delete a book from the database

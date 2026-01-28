@@ -85,6 +85,11 @@ class ProgressUpdate(BaseModel):
         return v
 
 
+class NotesUpdate(BaseModel):
+    """Schema for updating book notes"""
+    notes: str = Field(..., description="Reading notes and highlights")
+
+
 class BookStats(BaseModel):
     """Schema for reading statistics"""
     total_books: int

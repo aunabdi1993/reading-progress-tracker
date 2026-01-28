@@ -28,7 +28,7 @@ app.add_middleware(
 async def startup_event():
     """Initialize database on startup"""
     init_db()
-    print("=Ú Reading Progress Tracker API is running!")
+    print("=ï¿½ Reading Progress Tracker API is running!")
 
 
 @app.get("/")
@@ -139,6 +139,28 @@ async def update_book_progress(
         db=db,
         book_id=book_id,
         current_page=progress.current_page
+    )
+    if db_book is None:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return db_book
+
+
+@app.patch("/books/{book_id}/notes", response_model=schemas.BookResponse)
+async def update_book_notes(
+    book_id: int,
+    notes_update: schemas.NotesUpdate,
+    db: Session = Depends(get_db)
+):
+    """
+    Update notes for a book
+
+    - **book_id**: Book ID
+    - **notes**: Reading notes and highlights
+    """
+    db_book = crud.update_book_notes(
+        db=db,
+        book_id=book_id,
+        notes=notes_update.notes
     )
     if db_book is None:
         raise HTTPException(status_code=404, detail="Book not found")

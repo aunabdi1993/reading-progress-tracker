@@ -22,6 +22,7 @@ interface BookCardProps {
   book: Book;
   onDelete: (bookId: number) => void;
   onUpdateProgress: (bookId: number, currentPage: number) => void;
+  onUpdateNotes?: (bookId: number, notes: string) => void;
 }
 
 const statusColors = {
@@ -36,9 +37,12 @@ const statusLabels = {
   completed: "Completed",
 };
 
-export default function BookCard({ book, onDelete, onUpdateProgress }: BookCardProps) {
+export default function BookCard({ book, onDelete, onUpdateProgress, onUpdateNotes }: BookCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentPage, setCurrentPage] = useState(book.current_page);
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [notesExpanded, setNotesExpanded] = useState(false);
+  const [notesText, setNotesText] = useState(book.notes || "");
 
   const handleUpdateProgress = () => {
     if (currentPage >= 0 && currentPage <= book.total_pages) {
@@ -50,6 +54,13 @@ export default function BookCard({ book, onDelete, onUpdateProgress }: BookCardP
   const handleQuickUpdate = (pages: number) => {
     const newPage = Math.min(Math.max(0, book.current_page + pages), book.total_pages);
     onUpdateProgress(book.id, newPage);
+  };
+
+  const handleSaveNotes = () => {
+    if (onUpdateNotes) {
+      onUpdateNotes(book.id, notesText);
+      setIsEditingNotes(false);
+    }
   };
 
   return (
@@ -112,12 +123,65 @@ export default function BookCard({ book, onDelete, onUpdateProgress }: BookCardP
         </div>
       )}
 
-      {/* Notes */}
-      {book.notes && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-700 italic line-clamp-2">{book.notes}</p>
+      {/* Notes Section */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-sm font-semibold text-gray-700">Reading Notes</h4>
+          {!isEditingNotes && (
+            <button
+              onClick={() => setIsEditingNotes(true)}
+              className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              {notesText ? "Edit" : "+ Add Notes"}
+            </button>
+          )}
         </div>
-      )}
+
+        {isEditingNotes ? (
+          <div className="space-y-2">
+            <textarea
+              value={notesText}
+              onChange={(e) => setNotesText(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 text-sm"
+              rows={6}
+              placeholder="Add your reading notes, highlights, thoughts, or favorite quotes here..."
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleSaveNotes}
+                className="flex-1 bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+              >
+                Save Notes
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditingNotes(false);
+                  setNotesText(book.notes || "");
+                }}
+                className="flex-1 bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : notesText ? (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <p className={`text-sm text-gray-700 whitespace-pre-wrap ${!notesExpanded && notesText.length > 150 ? 'line-clamp-3' : ''}`}>
+              {notesText}
+            </p>
+            {notesText.length > 150 && (
+              <button
+                onClick={() => setNotesExpanded(!notesExpanded)}
+                className="text-xs text-indigo-600 hover:text-indigo-700 font-medium mt-2"
+              >
+                {notesExpanded ? "Show less" : "Read more"}
+              </button>
+            )}
+          </div>
+        ) : (
+          <p className="text-xs text-gray-400 italic">No notes yet. Click "Add Notes" to start.</p>
+        )}
+      </div>
 
       {/* Progress Update */}
       <div className="border-t border-gray-200 pt-4 mt-4">

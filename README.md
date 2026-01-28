@@ -1,217 +1,301 @@
-# Reading Progress Tracker - Frontend
+# Backend - Reading Progress Tracker API
 
-A modern, responsive web application for tracking your reading progress across multiple books and articles. Built with Next.js 16, TypeScript, and Tailwind CSS 4.
-
-## Overview
-
-This is the frontend application for the Reading Progress Tracker. It provides a beautiful, user-friendly interface for managing your reading list, tracking progress, viewing statistics, and organizing your books.
-
-## Features
-
-- **Beautiful Dashboard**: Modern, responsive design with gradient backgrounds and smooth animations
-- **Real-time Updates**: Instant feedback when updating book progress
-- **Quick Actions**: Fast progress updates with +10, +25, +50 pages buttons
-- **Statistics Cards**: Visual metrics showing total books, in progress, completed, and average progress
-- **Search & Filter**: Find books by title/author and filter by reading status
-- **Book Management**: Add, edit, and delete books with a clean modal interface
-- **Progress Visualization**: Visual progress bars with percentage completion
-- **Mobile-First**: Fully responsive design that works on all devices
+FastAPI-based REST API for tracking reading progress across books and articles.
 
 ## Tech Stack
 
-- **Next.js 16** - React framework with App Router
-- **TypeScript** - Type safety and better developer experience
-- **Tailwind CSS 4** - Utility-first CSS framework
-- **React 19** - Latest React features with hooks
-
-## Prerequisites
-
-- Node.js 18 or higher
-- npm, yarn, pnpm, or bun
-- Backend API running on `http://localhost:8000` (see [main README](../README.md))
-
-## Installation
-
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Set up environment variables (optional):
-
-Create a `.env.local` file if you need to customize the API URL:
-
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-If not set, it defaults to `http://localhost:8000`.
-
-## Running the Application
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The application will be available at [http://localhost:3000](http://localhost:3000)
-
-The page auto-updates as you edit files thanks to Fast Refresh.
-
-## Available Scripts
-
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build the application for production
-- `npm start` - Start production server (requires build first)
-- `npm run lint` - Run ESLint to check code quality
+- **FastAPI** (v0.115.6) - Modern, fast web framework for building APIs
+- **SQLAlchemy** (v2.0.36) - SQL toolkit and ORM
+- **Pydantic** (v2.10.4) - Data validation using Python type hints
+- **Uvicorn** (v0.34.0) - ASGI server for running FastAPI
+- **SQLite** - Default database (easily switchable to PostgreSQL/MySQL)
 
 ## Project Structure
 
 ```
-frontend/
-├── src/
-│   └── app/
-│       ├── components/
-│       │   ├── AddBookForm.tsx    # Modal form for adding books
-│       │   ├── BookCard.tsx       # Individual book display card
-│       │   └── StatsCard.tsx      # Statistics display card
-│       ├── globals.css            # Global styles and Tailwind
-│       ├── layout.tsx             # Root layout component
-│       └── page.tsx               # Main dashboard page
-├── public/                        # Static assets
-├── package.json
-├── tsconfig.json
-└── tailwind.config.ts
+backend/
+├── main.py           # FastAPI application and API routes
+├── models.py         # SQLAlchemy database models
+├── schemas.py        # Pydantic schemas for request/response validation
+├── database.py       # Database configuration and session management
+├── crud.py           # CRUD operations (Create, Read, Update, Delete)
+├── requirements.txt  # Python dependencies
+└── .venv/           # Virtual environment (created during setup)
 ```
 
-## Key Components
+## Getting Started
 
-### `page.tsx`
-Main dashboard component that:
-- Fetches and displays books from the API
-- Manages search and filter state
-- Shows statistics cards
-- Handles book CRUD operations
+### Prerequisites
 
-### `BookCard.tsx`
-Displays individual book information:
-- Book title, author, genre
-- Progress bar and percentage
-- Quick update buttons (+10, +25, +50 pages)
-- Rating display
-- Delete functionality
+- Python 3.8 or higher
+- pip (Python package manager)
 
-### `AddBookForm.tsx`
-Modal form for adding new books:
-- Title and author (required)
-- Total pages, current page
-- Genre, rating, notes
-- Form validation
-- API integration
+### Installation
 
-### `StatsCard.tsx`
-Reusable statistics display:
-- Icon, title, and value
-- Color-coded styling
-- Responsive design
-
-## API Integration
-
-The frontend connects to the FastAPI backend at `http://localhost:8000` (configurable via `NEXT_PUBLIC_API_URL`).
-
-Key endpoints used:
-- `GET /books` - Fetch all books with optional filters
-- `POST /books` - Add a new book
-- `PATCH /books/{id}/progress` - Update reading progress
-- `DELETE /books/{id}` - Delete a book
-- `GET /stats` - Fetch reading statistics
-
-## Development Tips
-
-1. **Hot Reload**: The development server automatically reloads when you save changes
-2. **TypeScript**: Type definitions are in each component file
-3. **Tailwind**: Use utility classes for styling (defined in `globals.css`)
-4. **State Management**: Uses React hooks (`useState`, `useEffect`)
-5. **Error Handling**: Console errors are logged for debugging
-
-## Building for Production
-
-1. Build the application:
-
+1. Navigate to the backend directory:
 ```bash
-npm run build
+cd backend
 ```
 
-2. Start the production server:
-
+2. Create a virtual environment:
 ```bash
-npm start
+python -m venv .venv
 ```
 
-The production build is optimized for performance with:
-- Minified code
-- Optimized images
-- Code splitting
-- Static page generation where possible
+3. Activate the virtual environment:
 
-## Deployment
+**macOS/Linux:**
+```bash
+source .venv/bin/activate
+```
 
-### Vercel (Recommended)
+**Windows:**
+```bash
+.venv\Scripts\activate
+```
 
-The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new):
+4. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-1. Push your code to GitHub
-2. Import your repository in Vercel
-3. Set the `NEXT_PUBLIC_API_URL` environment variable to your backend URL
-4. Deploy
+### Running the Server
 
-### Other Platforms
+Start the development server with auto-reload:
+```bash
+uvicorn main:app --reload
+```
 
-You can deploy to any platform that supports Node.js:
-- Netlify
-- AWS Amplify
-- Railway
-- Render
+The API will be available at:
+- **API Base URL**: http://localhost:8000
+- **Interactive API Documentation**: http://localhost:8000/docs (Swagger UI)
+- **Alternative Documentation**: http://localhost:8000/redoc (ReDoc)
 
-Make sure to:
-- Set the correct `NEXT_PUBLIC_API_URL` environment variable
-- Run `npm run build` before deployment
-- Use `npm start` to run the production server
+## API Endpoints
 
-## Environment Variables
+### Books
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_API_URL` | Backend API URL | `http://localhost:8000` |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/books` | Create a new book |
+| GET | `/books` | Get all books (with optional filters) |
+| GET | `/books/{book_id}` | Get a specific book by ID |
+| PUT | `/books/{book_id}` | Update a book's information |
+| PATCH | `/books/{book_id}/progress` | Update reading progress |
+| DELETE | `/books/{book_id}` | Delete a book |
+| GET | `/books/favorites` | Get all favorite books |
 
-## Learn More
+### Statistics
 
-To learn more about the technologies used:
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/stats` | Get overall reading statistics |
 
-- [Next.js Documentation](https://nextjs.org/docs) - Next.js features and API
-- [React Documentation](https://react.dev) - React library
-- [Tailwind CSS](https://tailwindcss.com/docs) - Utility-first CSS
-- [TypeScript](https://www.typescriptlang.org/docs/) - TypeScript language
+### Query Parameters
 
-## Contributing
+**GET /books**
+- `skip` (int): Pagination offset (default: 0)
+- `limit` (int): Maximum number of records (default: 100, max: 100)
+- `status` (string): Filter by status (not_started, in_progress, completed)
+- `search` (string): Search in title and author fields
 
-1. Make sure the backend is running
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+## Data Models
 
-## Full Project
+### Book Schema
 
-See the [main README](../README.md) for:
-- Complete project overview
-- Backend setup instructions
-- API documentation
-- Database configuration
-- Full feature list
+**BookCreate (Request)**
+```json
+{
+  "title": "string (required)",
+  "author": "string (required)",
+  "total_pages": "integer (required)",
+  "current_page": "integer (default: 0)",
+  "status": "string (default: not_started)",
+  "cover_url": "string (optional)",
+  "genre": "string (optional)",
+  "notes": "string (optional)",
+  "rating": "integer 0-5 (optional)",
+  "is_favorite": "boolean (default: false)"
+}
+```
 
-## Support
+**BookResponse**
+```json
+{
+  "id": "integer",
+  "title": "string",
+  "author": "string",
+  "total_pages": "integer",
+  "current_page": "integer",
+  "progress_percentage": "float",
+  "status": "string",
+  "cover_url": "string | null",
+  "genre": "string | null",
+  "notes": "string | null",
+  "rating": "integer | null",
+  "is_favorite": "boolean",
+  "created_at": "datetime",
+  "updated_at": "datetime"
+}
+```
 
-For issues or questions, please create an issue in the GitHub repository.
+### Statistics Schema
+
+**BookStats (Response)**
+```json
+{
+  "total_books": "integer",
+  "not_started": "integer",
+  "in_progress": "integer",
+  "completed": "integer",
+  "total_pages_read": "integer",
+  "average_progress": "float"
+}
+```
+
+## Database
+
+### Default Configuration
+
+The application uses SQLite by default. The database file `reading_tracker.db` is automatically created in the backend directory when you first run the server.
+
+### Database Initialization
+
+The database is automatically initialized on server startup. The `init_db()` function in `database.py` creates all necessary tables based on the SQLAlchemy models.
+
+### Switching Databases
+
+To use PostgreSQL or MySQL, set the `DATABASE_URL` environment variable:
+
+**PostgreSQL:**
+```bash
+export DATABASE_URL="postgresql://username:password@localhost:5432/reading_tracker"
+```
+
+**MySQL:**
+```bash
+export DATABASE_URL="mysql://username:password@localhost:3306/reading_tracker"
+```
+
+Then install the appropriate database driver:
+```bash
+# PostgreSQL
+pip install psycopg2-binary
+
+# MySQL
+pip install pymysql
+```
+
+## Development
+
+### Auto-reload
+
+The development server runs with `--reload` flag, which automatically restarts the server when code changes are detected.
+
+### API Documentation
+
+FastAPI automatically generates interactive API documentation:
+- **Swagger UI**: http://localhost:8000/docs - Try out API endpoints directly
+- **ReDoc**: http://localhost:8000/redoc - Alternative documentation view
+
+### CORS Configuration
+
+The API is configured to accept requests from:
+- http://localhost:3000
+- http://localhost:3001
+
+To modify allowed origins, edit the `allow_origins` list in `main.py`:
+
+```python
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    ...
+)
+```
+
+## Testing the API
+
+You can test the API using:
+
+1. **Swagger UI** (http://localhost:8000/docs)
+   - Interactive interface to try out endpoints
+   - Automatically includes request/response schemas
+
+2. **curl**
+   ```bash
+   # Create a book
+   curl -X POST "http://localhost:8000/books" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "title": "The Great Gatsby",
+       "author": "F. Scott Fitzgerald",
+       "total_pages": 180
+     }'
+
+   # Get all books
+   curl "http://localhost:8000/books"
+
+   # Get statistics
+   curl "http://localhost:8000/stats"
+   ```
+
+3. **HTTPie**
+   ```bash
+   http POST localhost:8000/books title="1984" author="George Orwell" total_pages=328
+   ```
+
+## Common Tasks
+
+### Add a new endpoint
+
+1. Define Pydantic schema in `schemas.py`
+2. Add database model if needed in `models.py`
+3. Create CRUD function in `crud.py`
+4. Add route in `main.py`
+
+### Modify database schema
+
+1. Update model in `models.py`
+2. Delete `reading_tracker.db` (development only)
+3. Restart server to recreate database
+
+For production, use a database migration tool like Alembic.
+
+## Troubleshooting
+
+**Import errors:**
+- Ensure virtual environment is activated
+- Reinstall dependencies: `pip install -r requirements.txt`
+
+**Database errors:**
+- Check if `reading_tracker.db` has correct permissions
+- Try deleting the database file and restart server
+
+**Port already in use:**
+- Change port: `uvicorn main:app --reload --port 8001`
+- Or kill the process using port 8000
+
+## Production Deployment
+
+For production deployment:
+
+1. Set environment variables:
+   ```bash
+   export DATABASE_URL="your_production_database_url"
+   ```
+
+2. Run with production settings:
+   ```bash
+   uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+   ```
+
+3. Consider using:
+   - **Gunicorn** with Uvicorn workers
+   - **Docker** for containerization
+   - **Nginx** as reverse proxy
+   - **SSL/TLS** certificates for HTTPS
+
+## License
+
+This project is open source and available for personal use.
